@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love Animation</title>
+  <style>
+    /* Gaya Dasar */
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .animation-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .heart-line {
+      width: 150px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+
+    .hidden-text {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.8;
+      color: #fff;
+      text-align: center;
+      max-width: 400px;
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+
+    .hidden-text.visible {
+      opacity: 1;
+    }
+
+    path {
+      stroke: red;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    .falling-stars,
+    .falling-hearts {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .falling-stars span,
+    .falling-hearts span {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background-color: #fff;
+      border-radius: 50%;
+      animation: fallingStar 5s linear infinite;
+    }
+
+    .falling-hearts span {
+      background-color: red;
+      animation: fallingHeart 8s linear infinite;
+      transform-origin: center;
+    }
+
+    .falling-stars span:hover,
+    .falling-hearts span:hover {
+      transform: scale(2);
+      background-color: yellow;
+      cursor: pointer;
+    }
+
+    @keyframes fallingStar {
+      0% {
+        transform: translate(0, 0);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-100%, 100vh);
+        opacity: 0;
+      }
+    }
+
+    @keyframes fallingHeart {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-100%, 100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="animation-container">
+    <svg class="heart-line" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <path
+        d="M50 30 
+           C20 0, 0 40, 50 90 
+           C100 40, 80 0, 50 30"
+        stroke="red" stroke-width="2" fill="none" />
+    </svg>
+    <p id="text" class="hidden-text">
+      Lembaran baru adalah memulai kembali setelah sebuah kegagalan atau bahkan sekadar melangkah menuju hal baru yang belum pernah kita coba sebelumnya.
+    </p>
+  </div>
+  <div class="falling-stars"></div>
+  <div class="falling-hearts"></div>
+  
+  <script>
+    // Ambil nama dari URL (jika ada)
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get('name') || "Pengguna";
+
+    // Tambahkan animasi setelah halaman dimuat
+    window.onload = () => {
+      const path = document.querySelector('path');
+      const text = document.getElementById('text');
+
+      // Animasi menggambar garis
+      path.style.strokeDasharray = path.getTotalLength();
+      path.style.strokeDashoffset = path.getTotalLength();
+
+      setTimeout(() => {
+        path.style.transition = 'stroke-dashoffset 4s ease';
+        path.style.strokeDashoffset = '0';
+
+        // Tampilkan teks setelah animasi selesai
+        setTimeout(() => {
+          text.classList.add('visible');
+        }, 4000);
+      }, 500);
+
+      // Tambahkan bintang jatuh
+      const fallingStars = document.querySelector('.falling-stars');
+      for (let i = 0; i < 50; i++) {
+        const star = document.createElement('span');
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        fallingStars.appendChild(star);
+      }
+
+      // Tambahkan hati jatuh
+      const fallingHearts = document.querySelector('.falling-hearts');
+      for (let i = 0; i < 20; i++) {
+        const heart = document.createElement('span');
+        heart.style.left = `${Math.random() * 100}%`;
+        heart.style.animationDelay = `${Math.random() * 8}s`;
+        fallingHearts.appendChild(heart);
+      }
+    };
+  </script>
+</body>
+</html>
